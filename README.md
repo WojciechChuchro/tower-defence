@@ -2,7 +2,8 @@
 
 ## Overview
 
-This repository is a collection of various algorithms implemented for educational purposes and practice. Each algorithm is contained within its own file for easy reference.
+This repository is a collection of various algorithms implemented in both JavaScript and Java for educational purposes and practice. 
+Each algorithm is contained within its own file for easy reference.
 
 ## Getting Started
 
@@ -10,10 +11,26 @@ This repository is a collection of various algorithms implemented for educationa
 
 - Node.js
 - npm
+- Java Development Kit (JDK)
 
 ### Usage
 
-After cloning the repository, navigate to the project folder.
-To run an individual algorithm file, navigate to the project directory and run
+After successfully cloning the repository, move to the folder that houses the algorithms. 
+From there, you can execute individual algorithm files by running the appropriate command.
 
-node <filename.js>
+#### For Java Algorithms
+
+Compile the Java file:
+
+- `javac <filename.java>`
+
+Run the compiled program:
+
+-    `java <filename>`
+
+
+#### For JavaScript Algorithms
+
+- `node <filename.js>`
+
+Note: Replace `<filename>` with the actual filename you want to run.
