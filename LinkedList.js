@@ -30,6 +30,17 @@ class LinkedList {
         this.head = newNode
         this.length++;
     }
+
+    printList() {
+        let currentNode = this.head;
+        let str = "HEAD -> ";
+        while(currentNode !== null) {
+            str += `${currentNode.value} -> `;
+            currentNode = currentNode.next;
+        }
+        str += "NULL";
+        console.log(str);
+    }
 }
 
 let myLinkedList = new LinkedList(10);
@@ -38,6 +49,6 @@ myLinkedList.append(5);
 myLinkedList.append(16);
 myLinkedList.prepend(1);
 
-console.log(myLinkedList);
+myLinkedList.printList();
 
 
