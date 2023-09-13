@@ -12,6 +12,7 @@ public class LinkedList {
     private static class Node {
         public double value;
         public Node next;
+
         Node(double value) {
             this.value = value;
             this.next = null;
@@ -32,6 +33,43 @@ public class LinkedList {
         this.length++;
     }
 
+    public void insert(double value, int index) {
+        Node currentNode = this.lookup(index);
+        if (currentNode == null) {
+            return;
+        }
+        currentNode.value = value;
+        this.length++;
+    }
+
+    public void remove(int index) {
+        if (index == 0) {
+            this.head = this.head.next;
+        } else {
+            Node previousNode = this.lookup(index - 1);
+            Node nextNode = this.lookup(index + 1);
+            if (previousNode == null) {
+                return;
+            }
+
+            previousNode.next = nextNode;
+        }
+        this.length--;
+    }
+
+    private Node lookup(int index) {
+        if (this.length < index || index < 0) {
+            return null;
+        }
+
+        Node currentNode = this.head;
+
+        for (int i = 0; i != index; i++ ) {
+            currentNode = currentNode.next;
+        }
+        return currentNode;
+    }
+
     public void printList() {
         Node currentNode = this.head;
         System.out.print("HEAD -> ");
@@ -43,15 +81,11 @@ public class LinkedList {
     }
 
     public static void main(String[] args) {
-        LinkedList myLinkedList = new LinkedList(10F);
+        LinkedList myLinkedList = new LinkedList(10);
         myLinkedList.append(5);
-        myLinkedList.append(12.3);
-        myLinkedList.append(18.3);
-        myLinkedList.append(16);
-        myLinkedList.prepend(1);
-        myLinkedList.prepend(2);
-        myLinkedList.prepend(3);
-
+        myLinkedList.prepend(20);
+        myLinkedList.insert(25, 2);
+        myLinkedList.remove(0);
         myLinkedList.printList();
     }
 }
