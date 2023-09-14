@@ -5,9 +5,9 @@
   "main": "LinkedList.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint .",
-    "fix": "eslint . --fix",
-    "format": "prettier --write \"./**/*.{js,json}\""
+    "lint": "../node_modules/.bin/eslint .",
+    "fix": "../node_modules/.bin/eslint . --fix",
+    "format": "../node_modules/.bin/prettier --write \\\"./**/*.{js,json}\\\""
   },
   "keywords": [],
   "author": "",
