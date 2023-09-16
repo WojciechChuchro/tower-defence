@@ -36,12 +36,17 @@ public class LinkedList {
     }
 
     public void insert(double value, int index) {
-        Node currentNode = this.lookup(index);
-        if (currentNode == null) {
-            return;
+        Node newNode = new Node(value);
+        if (index == 0) {
+            this.prepend(newNode.value);
+        } else {
+            Node currentNode = lookup(index - 1);
+            if (currentNode != null) {
+                newNode.next = currentNode.next;
+                currentNode.next = newNode;
+                this.length++;
+            }
         }
-        currentNode.value = value;
-        this.length++;
     }
 
     public void remove(int index) {
@@ -85,9 +90,9 @@ public class LinkedList {
     public static void main(String[] args) {
         LinkedList myLinkedList = new LinkedList(10);
         myLinkedList.append(5);
-        myLinkedList.prepend(20);
+        myLinkedList.append(20);
         myLinkedList.insert(25, 2);
-        myLinkedList.remove(0);
+//        myLinkedList.remove(0);
         myLinkedList.printList();
     }
 }
