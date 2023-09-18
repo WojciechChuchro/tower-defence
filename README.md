@@ -19,17 +19,26 @@ After successfully cloning the repository, move to the folder that houses the al
 From there, you can execute individual algorithm files by running the appropriate command.
 
 #### For Java Algorithms
+Go to the Java directory:
+
+- `cd ./Java`
 
 Compile the Java file:
 
-- `javac <filename.java>`
-
+- `javac -d ./compiled <filename.java>`
+  
 Run the compiled program:
 
--    `java <filename>`
+- `java -cp ./compiled <filename>`
 
 
 #### For JavaScript Algorithms
+
+Go to the JavaScript directory:
+
+- `cd ./JavaScript`
+
+Run the javascript program:
 
 - `node <filename.js>`
 
