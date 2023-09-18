@@ -11,16 +11,6 @@ public class LinkedList {
         this.length = 1;
     }
 
-    private static class Node {
-        public double value;
-        public Node next;
-
-        Node(double value) {
-            this.value = value;
-            this.next = null;
-        }
-    }
-
     public void append(double value) {
         Node newNode = new Node(value);
         this.tail.next = newNode;
@@ -71,7 +61,7 @@ public class LinkedList {
 
         Node currentNode = this.head;
 
-        for (int i = 0; i != index; i++ ) {
+        for (int i = 0; i != index; i++) {
             currentNode = currentNode.next;
         }
         return currentNode;
@@ -92,7 +82,6 @@ public class LinkedList {
         myLinkedList.append(5);
         myLinkedList.append(20);
         myLinkedList.insert(25, 2);
-//        myLinkedList.remove(0);
         myLinkedList.printList();
     }
 }
