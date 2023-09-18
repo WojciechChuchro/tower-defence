@@ -1,42 +1,30 @@
 package Java;
 
 public class DoubleLinkedList {
-    private Node head;
-    private Node tail;
+    private DoubleNode head;
+    private DoubleNode tail;
     private int length;
 
     public DoubleLinkedList(double value) {
-        this.head = new Node(value);
+        this.head = new DoubleNode(value);
         this.tail = this.head;
         this.length = 1;
     }
 
-    private static class Node {
-        public double value;
-        public Node next;
-
-        public Node previous;
-
-        Node(double value) {
-            this.value = value;
-            this.next = null;
-            this.previous = null;
-        }
-    }
 
     public void append(double value) {
-        Node newNode = new Node(value);
-        this.tail.next = newNode;
+        DoubleNode newDoubleNode = new DoubleNode(value);
+        this.tail.next = newDoubleNode;
         this.tail.next.previous = this.tail;
-        this.tail = newNode;
+        this.tail = newDoubleNode;
         this.length++;
     }
 
     public void prepend(double value) {
-        Node newNode = new Node(value);
-        newNode.next = this.head;
-        this.head.previous = newNode;
-        this.head = newNode;
+        DoubleNode newDoubleNode = new DoubleNode(value);
+        newDoubleNode.next = this.head;
+        this.head.previous = newDoubleNode;
+        this.head = newDoubleNode;
         this.length++;
     }
 
@@ -45,17 +33,17 @@ public class DoubleLinkedList {
             return;
         }
 
-        Node newNode = new Node(value);
+        DoubleNode newDoubleNode = new DoubleNode(value);
         if (index == 0) {
-            this.prepend(newNode.value);
+            this.prepend(newDoubleNode.value);
         } else {
-            Node currentNode = lookup(index - 1);
-            if (currentNode != null) {
-                newNode.next = currentNode.next;
-                newNode.previous = currentNode;
-                currentNode.next = newNode;
-                if (newNode.next != null) {
-                    newNode.next.previous = newNode;
+            DoubleNode currentDoubleNode = lookup(index - 1);
+            if (currentDoubleNode != null) {
+                newDoubleNode.next = currentDoubleNode.next;
+                newDoubleNode.previous = currentDoubleNode;
+                currentDoubleNode.next = newDoubleNode;
+                if (newDoubleNode.next != null) {
+                    newDoubleNode.next.previous = newDoubleNode;
                 }
                 this.length++;
             }
@@ -86,18 +74,18 @@ public class DoubleLinkedList {
         }
 
         else {
-            Node prevNode = lookup(index - 1);
-            if (prevNode == null || prevNode.next == null) {
+            DoubleNode prevDoubleNode = lookup(index - 1);
+            if (prevDoubleNode == null || prevDoubleNode.next == null) {
                 return;
             }
 
-            Node nodeToRemove = prevNode.next;
-            Node nextNode = nodeToRemove.next;
+            DoubleNode doubleNodeToRemove = prevDoubleNode.next;
+            DoubleNode nextDoubleNode = doubleNodeToRemove.next;
 
-            prevNode.next = nextNode;
+            prevDoubleNode.next = nextDoubleNode;
 
-            if (nextNode != null) {
-                nextNode.previous = prevNode;
+            if (nextDoubleNode != null) {
+                nextDoubleNode.previous = prevDoubleNode;
             }
         }
 
@@ -105,35 +93,35 @@ public class DoubleLinkedList {
     }
 
 
-    private Node lookup(int index) {
+    private DoubleNode lookup(int index) {
         if (isIndexInvalid(index)) {
             return null;
         }
 
-        Node currentNode;
-        currentNode = this.head;
+        DoubleNode currentDoubleNode;
+        currentDoubleNode = this.head;
 
         for (int i = 0; i != index; i++)
-            currentNode = currentNode.next;
-        return currentNode;
+            currentDoubleNode = currentDoubleNode.next;
+        return currentDoubleNode;
     }
 
     public void printListFromHead() {
-        Node currentNode = this.head;
+        DoubleNode currentDoubleNode = this.head;
         System.out.print("HEAD -> ");
-        while (currentNode != null) {
-            System.out.print(currentNode.value + " -> ");
-            currentNode = currentNode.next;
+        while (currentDoubleNode != null) {
+            System.out.print(currentDoubleNode.value + " -> ");
+            currentDoubleNode = currentDoubleNode.next;
         }
         System.out.println("NULL");
     }
 
     public void printListFromTail() {
-        Node currentNode = this.tail;
+        DoubleNode currentDoubleNode = this.tail;
         System.out.print("TAIL -> ");
-        while (currentNode != null) {
-            System.out.print(currentNode.value + " -> ");
-            currentNode = currentNode.previous;
+        while (currentDoubleNode != null) {
+            System.out.print(currentDoubleNode.value + " -> ");
+            currentDoubleNode = currentDoubleNode.previous;
         }
         System.out.println("NULL");
     }
