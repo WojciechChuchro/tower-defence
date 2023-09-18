@@ -4,13 +4,14 @@ public class StackWithArray {
     private final float[] array;
 
     private int index;
+
     public StackWithArray(int length) {
         this.array = new float[length];
         this.index = 0;
     }
 
     public void peek() {
-        if(index > 0) {
+        if (index > 0) {
             System.out.println(this.array[index - 1]);
         } else {
             System.out.println("Stack is empty");
@@ -18,7 +19,7 @@ public class StackWithArray {
     }
 
     public void push(float value) {
-        if(this.index < this.array.length) {
+        if (this.index < this.array.length) {
             this.array[index] = value;
             index++;
         } else {
@@ -27,7 +28,7 @@ public class StackWithArray {
     }
 
     public void pop() {
-        if(index != 0) {
+        if (index != 0) {
             index--;
             this.array[index] = 0;
         } else {
@@ -41,8 +42,8 @@ public class StackWithArray {
         } else {
             System.out.println("Stack is not empty");
         }
-
     }
+
     public static void main(String[] args) {
         StackWithArray myStackWithArray = new StackWithArray(10);
         myStackWithArray.push(15);

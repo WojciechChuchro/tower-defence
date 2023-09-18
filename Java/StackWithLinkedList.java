@@ -4,6 +4,7 @@ public class StackWithLinkedList {
     private Node top;
     private Node bottom;
     private int length;
+
     public StackWithLinkedList() {
         this.top = null;
         this.bottom = null;
@@ -47,8 +48,8 @@ public class StackWithLinkedList {
         } else {
             System.out.println("Stack is not empty");
         }
-
     }
+
     public static void main(String[] args) {
         StackWithLinkedList myStackWithLinkedList = new StackWithLinkedList();
         myStackWithLinkedList.push(15);
