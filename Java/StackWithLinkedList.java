@@ -1,5 +1,7 @@
 package Java;
 
+import Java.nodes.Node;
+
 public class StackWithLinkedList {
     private Node top;
     private Node bottom;
@@ -20,13 +22,13 @@ public class StackWithLinkedList {
     }
 
     public void push(float value) {
-        Node newTop = new Node(value);
+        Node newNode = new Node(value);
         if (this.length == 0) {
-            this.top = newTop;
-            this.bottom = newTop;
+            this.top = newNode;
+            this.bottom = newNode;
         } else {
             Node holdingPointer = this.top;
-            this.top = newTop;
+            this.top = newNode;
             this.top.next = holdingPointer;
         }
         this.length++;

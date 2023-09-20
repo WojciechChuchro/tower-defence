@@ -1,4 +1,4 @@
-package Java;
+package Java.nodes;
 
 public class BinarySearchNode {
     public double value;
@@ -10,7 +10,7 @@ public class BinarySearchNode {
         this.right = null;
         this.value = 0;
     }
-    BinarySearchNode(double value) {
+    public BinarySearchNode(double value) {
         this.left = null;
         this.right = null;
         this.value = value;

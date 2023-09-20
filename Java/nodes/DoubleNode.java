@@ -1,4 +1,4 @@
-package Java;
+package Java.nodes;
 
 public class DoubleNode {
     public double value;
@@ -6,7 +6,7 @@ public class DoubleNode {
 
     public DoubleNode previous;
 
-    DoubleNode(double value) {
+    public DoubleNode(double value) {
         this.value = value;
         this.next = null;
         this.previous = null;

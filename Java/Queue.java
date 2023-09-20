@@ -1,5 +1,7 @@
 package Java;
 
+import Java.nodes.Node;
+
 public class Queue {
     private Node first;
     private Node last;

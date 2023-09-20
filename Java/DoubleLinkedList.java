@@ -1,5 +1,7 @@
 package Java;
 
+import Java.nodes.DoubleNode;
+
 public class DoubleLinkedList {
     private DoubleNode head;
     private DoubleNode tail;
@@ -62,18 +64,14 @@ public class DoubleLinkedList {
             } else {
                 this.tail = null;
             }
-        }
-
-        else if (index == this.length - 1) {
+        } else if (index == this.length - 1) {
             this.tail = this.tail.previous;
             if (this.tail != null) {
                 this.tail.next = null;
             } else {
                 this.head = null;
             }
-        }
-
-        else {
+        } else {
             DoubleNode prevDoubleNode = lookup(index - 1);
             if (prevDoubleNode == null || prevDoubleNode.next == null) {
                 return;
@@ -105,6 +103,7 @@ public class DoubleLinkedList {
             currentDoubleNode = currentDoubleNode.next;
         return currentDoubleNode;
     }
+
 
     public void printListFromHead() {
         DoubleNode currentDoubleNode = this.head;

@@ -1,5 +1,7 @@
 package Java;
 
+import Java.nodes.Node;
+
 public class LinkedList {
     private Node head;
     private Node tail;

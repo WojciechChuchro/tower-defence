@@ -1,5 +1,7 @@
 package Java;
 
+import Java.nodes.BinarySearchNode;
+
 public class BinarySearchTree {
     private BinarySearchNode root;
     BinarySearchTree() {
