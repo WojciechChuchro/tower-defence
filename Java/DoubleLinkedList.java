@@ -104,6 +104,21 @@ public class DoubleLinkedList {
         return currentDoubleNode;
     }
 
+    public void reverse() {
+        DoubleNode current = this.head;
+        DoubleNode temp = this.head;
+        this.head = this.tail;
+        this.tail = temp;
+
+        while (current != null) {
+            DoubleNode nextNode = current.next;
+            current.next = current.previous;
+            current.previous = nextNode;
+
+            current = nextNode;
+        }
+    }
+
 
     public void printListFromHead() {
         DoubleNode currentDoubleNode = this.head;
@@ -139,5 +154,7 @@ public class DoubleLinkedList {
         doubleLinkedList.remove(1);
         doubleLinkedList.printListFromHead();
         doubleLinkedList.printListFromTail();
+        doubleLinkedList.reverse();
+        doubleLinkedList.printListFromHead();
     }
 }
