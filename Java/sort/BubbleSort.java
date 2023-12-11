@@ -4,11 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class BubbleSort {
-    public static void main(String[] args) {
-        List<Integer> sortedList = sort(List.of(3, 5, 3, 2 ));
-        System.out.println(sortedList);
-    }
-
     public static List<Integer> sort(List<Integer> array) {
         int length = array.size();
 
