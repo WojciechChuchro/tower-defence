@@ -1,20 +1,6 @@
 package Java.sort;
 
-import java.util.Arrays;
-
 public class SelectionSort implements ISort {
-
-    public static void main(String[] args) {
-        SortConstant sortConstant = new SortConstant();
-        SelectionSort selectionSort = new SelectionSort();
-
-
-        selectionSort.sort(sortConstant.stringArray);
-        System.out.println("Sorted String Array: " + Arrays.toString(sortConstant.stringArray));
-
-        selectionSort.sort(sortConstant.intArray);
-        System.out.println("Sorted Integer Array: " + Arrays.toString(sortConstant.intArray));
-    }
 
     @Override
     public <T extends Comparable<T>> void sort(T[] array) {
