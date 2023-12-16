@@ -132,6 +132,7 @@ public class DoubleLinkedList {
 
     public void printListFromTail() {
         DoubleNode currentDoubleNode = this.tail;
+
         System.out.print("TAIL -> ");
         while (currentDoubleNode != null) {
             System.out.print(currentDoubleNode.value + " -> ");
@@ -142,19 +143,5 @@ public class DoubleLinkedList {
 
     public boolean isIndexInvalid(int index) {
         return index < 0 || index >= this.length;
-    }
-
-
-    public static void main(String[] args) {
-        DoubleLinkedList doubleLinkedList = new DoubleLinkedList(10);
-        doubleLinkedList.append(5);
-        doubleLinkedList.append(15);
-        doubleLinkedList.prepend(99);
-        doubleLinkedList.insert(25, 1);
-        doubleLinkedList.remove(1);
-        doubleLinkedList.printListFromHead();
-        doubleLinkedList.printListFromTail();
-        doubleLinkedList.reverse();
-        doubleLinkedList.printListFromHead();
     }
 }

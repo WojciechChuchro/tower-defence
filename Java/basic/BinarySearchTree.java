@@ -87,25 +87,9 @@ public class BinarySearchTree {
         for (int i = 0; i < depth * 4; i++) {
             System.out.print(" ");
         }
+
         System.out.println(node.value);
         printTree(node.left, depth + 1);
-    }
-
-
-
-    public static void main(String[] args) {
-        BinarySearchTree myBinarySearchTree = new BinarySearchTree();
-        myBinarySearchTree.insert(15);
-        myBinarySearchTree.insert(10);
-        myBinarySearchTree.insert(11);
-        myBinarySearchTree.insert(7);
-        myBinarySearchTree.insert(25);
-        myBinarySearchTree.insert(24);
-        myBinarySearchTree.insert(35);
-        myBinarySearchTree.insert(45);
-        myBinarySearchTree.insert(26);
-        myBinarySearchTree.printTree();
-        System.out.println(myBinarySearchTree.lookup(34232));
     }
 }
 

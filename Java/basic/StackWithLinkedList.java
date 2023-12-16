@@ -51,15 +51,5 @@ public class StackWithLinkedList {
             System.out.println("Stack is not empty");
         }
     }
-
-    public static void main(String[] args) {
-        StackWithLinkedList myStackWithLinkedList = new StackWithLinkedList();
-        myStackWithLinkedList.push(15);
-        myStackWithLinkedList.push(25);
-        myStackWithLinkedList.pop();
-        myStackWithLinkedList.pop();
-        myStackWithLinkedList.peek();
-        myStackWithLinkedList.isEmpty();
-    }
 }
 

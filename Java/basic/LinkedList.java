@@ -78,12 +78,4 @@ public class LinkedList {
         }
         System.out.println("NULL");
     }
-
-    public static void main(String[] args) {
-        LinkedList myLinkedList = new LinkedList(10);
-        myLinkedList.append(5);
-        myLinkedList.append(20);
-        myLinkedList.insert(25, 2);
-        myLinkedList.printList();
-    }
 }

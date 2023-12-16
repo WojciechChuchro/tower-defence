@@ -43,15 +43,5 @@ public class StackWithArray {
             System.out.println("Stack is not empty");
         }
     }
-
-    public static void main(String[] args) {
-        StackWithArray myStackWithArray = new StackWithArray(10);
-        myStackWithArray.push(15);
-        myStackWithArray.push(25);
-        myStackWithArray.peek();
-        myStackWithArray.pop();
-        myStackWithArray.pop();
-        myStackWithArray.isEmpty();
-    }
 }
 

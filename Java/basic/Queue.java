@@ -49,14 +49,4 @@ public class Queue {
             System.out.println("Queue is not empty");
         }
     }
-
-    public static void main(String[] args) {
-        Queue myQueue = new Queue();
-        myQueue.enqueue(15);
-        myQueue.enqueue(25);
-        myQueue.dequeue();
-        myQueue.peek();
-        myQueue.dequeue();
-        myQueue.isEmpty();
-    }
 }
