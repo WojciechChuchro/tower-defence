@@ -8,7 +8,7 @@ public class BinarySearchTree {
         this.root = null;
     }
 
-    public void insertWithoutRecuresion(double value) {
+    public void insertWithoutRecursion(double value) {
         BinarySearchNode newNode = new BinarySearchNode(value);
         if (this.root == null) {
             this.root = newNode;
