@@ -1,6 +1,6 @@
-package Java;
+package Java.basic;
 
-import Java.nodes.Node;
+import Java.basic.nodes.Node;
 
 public class LinkedList {
     private Node head;

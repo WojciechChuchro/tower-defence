@@ -1,4 +1,4 @@
-package Java.nodes;
+package Java.basic.nodes;
 
 public class DoubleNode {
     public double value;

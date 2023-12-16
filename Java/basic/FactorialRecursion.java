@@ -1,4 +1,4 @@
-package Java.LeetCode;
+package Java.basic;
 
 public class FactorialRecursion {
 

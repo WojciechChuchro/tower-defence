@@ -1,6 +1,6 @@
-package Java;
+package Java.basic;
 
-import Java.nodes.BinarySearchNode;
+import Java.basic.nodes.BinarySearchNode;
 
 public class BinarySearchTree {
     private BinarySearchNode root;

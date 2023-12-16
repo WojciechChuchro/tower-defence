@@ -1,4 +1,4 @@
-package Java;
+package Java.basic;
 
 public class StackWithArray {
     private final float[] array;

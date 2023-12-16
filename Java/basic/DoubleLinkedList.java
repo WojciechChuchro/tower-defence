@@ -1,6 +1,6 @@
-package Java;
+package Java.basic;
 
-import Java.nodes.DoubleNode;
+import Java.basic.nodes.DoubleNode;
 
 public class DoubleLinkedList {
     private DoubleNode head;
