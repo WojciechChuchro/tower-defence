@@ -2,7 +2,6 @@ package Java.basic;
 
 public class StackWithArray {
     private final float[] array;
-
     private int index;
 
     public StackWithArray(int length) {

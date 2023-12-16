@@ -6,6 +6,7 @@ public class Queue {
     private Node first;
     private Node last;
     private int length;
+
     public Queue() {
         this.first = null;
         this.last = null;

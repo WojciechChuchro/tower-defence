@@ -19,6 +19,7 @@ public class BinarySearchTree {
                     System.out.println("The value is already added");
                     break;
                 }
+
                 if (iterator.value < value) {
                     if (iterator.right == null) {
                         iterator.right = newNode;
@@ -26,6 +27,7 @@ public class BinarySearchTree {
                     }
                     iterator = iterator.right;
                 }
+
                 if (iterator.value > value) {
                     if (iterator.left == null) {
                         iterator.left = newNode;

@@ -114,7 +114,6 @@ public class DoubleLinkedList {
             DoubleNode nextNode = current.next;
             current.next = current.previous;
             current.previous = nextNode;
-
             current = nextNode;
         }
     }
@@ -122,6 +121,7 @@ public class DoubleLinkedList {
 
     public void printListFromHead() {
         DoubleNode currentDoubleNode = this.head;
+
         System.out.print("HEAD -> ");
         while (currentDoubleNode != null) {
             System.out.print(currentDoubleNode.value + " -> ");
