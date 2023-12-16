@@ -21,21 +21,17 @@ public class SelectionSort implements ISort {
         int length = array.length;
 
         for (int i = 0; i < length; i++) {
-            int index = i;
-            T minElement = array[i];
+            int min = i;
+            T temp = array[i];
 
-            for (int j = i; j < length; j++) {
-                if (minElement.compareTo(array[j]) > 0) {
-                    index = j;
-                    minElement = array[j];
+            for (int j = i + 1; j < length; j++) {
+                if (array[min].compareTo(array[j]) > 0) {
+                    min = j;
                 }
             }
 
-            if (index != i) {
-                T temp = array[i];
-                array[i] = minElement;
-                array[index] = temp;
-            }
+            array[i] = array[min];
+            array[min] = temp;
         }
     }
 }
