@@ -1,19 +1,6 @@
 package Java.sort;
 
-import java.util.Arrays;
-
 public class BubbleSort implements ISort {
-
-    public static void main(String[] args) {
-        SortConstant sortConstant = new SortConstant();
-        BubbleSort bubbleSort = new BubbleSort();
-
-        bubbleSort.sort(sortConstant.stringArray);
-        System.out.println("Sorted String Array: " + Arrays.toString(sortConstant.stringArray));
-
-        bubbleSort.sort(sortConstant.intArray);
-        System.out.println("Sorted Integer Array: " + Arrays.toString(sortConstant.intArray));
-    }
 
     @Override
     public <T extends Comparable<T>> void sort(T[] array) {
@@ -28,6 +15,5 @@ public class BubbleSort implements ISort {
                 }
             }
         }
-
     }
 }
