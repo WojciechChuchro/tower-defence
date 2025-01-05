@@ -1,6 +1,5 @@
 package Java.LeetCode;
 
-import Java.basic.nodes.ListNode;
 
 import java.util.ArrayList;
 import java.util.List;
