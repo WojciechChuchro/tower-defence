@@ -9,9 +9,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -24,26 +24,128 @@ public class Game extends Application {
     private final List<Point2D> path = new ArrayList<>();
     private float money = 100;
     private long lastEnemySpawnTime = 0;
-    private final long enemySpawnCooldown = 500_000_000; // 2 seconds in nanoseconds
+    private final long enemySpawnCooldown = 500_000_000;
     private GraphicsContext gc;
     private boolean isMenuVisible = false;
-    private VBox menu; // Menu to display options
-    private Pane root; // The root pane for the scene
+    private VBox menu;
+    private Pane gameRoot;
     private Text moneyText;
+    private Stage primaryStage;
+    private Scene gameScene;
+    private Scene mainMenuScene;
+    private boolean isGameRunning = false;
+    private AnimationTimer gameLoop;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
+        this.primaryStage = stage;
+        initializeMainMenu();
+        initializeGame();
+
+        primaryStage.setTitle("Tower Defense Game");
+        primaryStage.setScene(mainMenuScene);
+        primaryStage.show();
+    }
+
+    private void initializeMainMenu() {
+        // Create main menu buttons
+        Button playButton = createMenuButton("Play");
+        Button settingsButton = createMenuButton("Settings");
+        Button exitButton = createMenuButton("Exit");
+
+        // Create title
+        Text titleText = new Text("Tower Defense");
+        titleText.setFont(new Font("Arial Bold", 40));
+        titleText.setFill(Color.WHITE);
+
+        // Setup button actions
+        playButton.setOnAction(e -> startGame());
+        settingsButton.setOnAction(e -> showSettings());
+        exitButton.setOnAction(e -> primaryStage.close());
+
+        // Create main menu layout
+        VBox menuLayout = new VBox(20);
+        menuLayout.setAlignment(Pos.CENTER);
+        menuLayout.getChildren().addAll(titleText, playButton, settingsButton, exitButton);
+        menuLayout.setStyle("-fx-background-color: #2C3E50;");
+
+        mainMenuScene = new Scene(menuLayout, 800, 600);
+    }
+
+    private Button createMenuButton(String text) {
+        Button button = new Button(text);
+        button.setPrefWidth(200);
+        button.setPrefHeight(40);
+        button.setStyle(
+                "-fx-background-color: #3498db;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 16px;" +
+                        "-fx-cursor: hand;"
+        );
+
+        // Add hover effect
+        button.setOnMouseEntered(e ->
+                button.setStyle(
+                        "-fx-background-color: #2980b9;" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-size: 16px;" +
+                                "-fx-cursor: hand;"
+                )
+        );
+
+        button.setOnMouseExited(e ->
+                button.setStyle(
+                        "-fx-background-color: #3498db;" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-size: 16px;" +
+                                "-fx-cursor: hand;"
+                )
+        );
+
+        return button;
+    }
+
+    private void showSettings() {
+        // Create settings menu
+        VBox settingsLayout = new VBox(20);
+        settingsLayout.setAlignment(Pos.CENTER);
+        settingsLayout.setStyle("-fx-background-color: #2C3E50;");
+
+        Text settingsTitle = new Text("Settings");
+        settingsTitle.setFont(new Font("Arial Bold", 30));
+        settingsTitle.setFill(Color.WHITE);
+
+        // Add some example settings
+        Button difficultyButton = createMenuButton("Difficulty: Normal");
+        Button soundButton = createMenuButton("Sound: On");
+        Button backButton = createMenuButton("Back to Main Menu");
+
+        backButton.setOnAction(e -> primaryStage.setScene(mainMenuScene));
+
+        settingsLayout.getChildren().addAll(settingsTitle, difficultyButton, soundButton, backButton);
+        Scene settingsScene = new Scene(settingsLayout, 800, 600);
+        primaryStage.setScene(settingsScene);
+    }
+
+    private void initializeGame() {
         moneyText = new Text("Your money: " + money);
         moneyText.setX(700);
         moneyText.setY(20);
+
         Canvas canvas = new Canvas(800, 600);
         gc = canvas.getGraphicsContext2D();
-        this.root = new Pane(canvas);
-        this.root.getChildren().add(moneyText);
-        Scene scene = new Scene(root, 800, 600);
-        stage.setScene(scene);
-        stage.setTitle("Tower Defense Game");
-        stage.show();
+
+        gameRoot = new Pane(canvas);
+        gameRoot.getChildren().add(moneyText);
+
+        // Create pause button
+        Button pauseButton = new Button("Menu");
+        pauseButton.setLayoutX(10);
+        pauseButton.setLayoutY(10);
+        pauseButton.setOnAction(e -> showPauseMenu());
+        gameRoot.getChildren().add(pauseButton);
+
+        gameScene = new Scene(gameRoot, 800, 600);
 
         // Initialize path
         path.add(new Point2D(0, 300));
@@ -53,8 +155,13 @@ public class Game extends Application {
         path.add(new Point2D(600, 500));
         path.add(new Point2D(800, 500));
 
-        scene.setOnMouseClicked(e -> {
-            if(isMenuVisible) {
+        setupGameControls();
+        initializeGameLoop();
+    }
+
+    private void setupGameControls() {
+        gameScene.setOnMouseClicked(e -> {
+            if (!isGameRunning || isMenuVisible) {
                 return;
             }
             if (isTowerClicked(e.getX(), e.getY())) {
@@ -63,14 +170,65 @@ public class Game extends Application {
                 towers.add(new Tower(e.getX(), e.getY()));
             }
         });
+    }
 
-        new AnimationTimer() {
+    private void initializeGameLoop() {
+        gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                update(now);
-                render();
+                if (isGameRunning) {
+                    update(now);
+                    render();
+                }
             }
-        }.start();
+        };
+    }
+
+    private void startGame() {
+        isGameRunning = true;
+        primaryStage.setScene(gameScene);
+        gameLoop.start();
+    }
+
+    private void showPauseMenu() {
+        isGameRunning = false;
+
+        Button resumeButton = createMenuButton("Resume");
+        Button mainMenuButton = createMenuButton("Main Menu");
+
+        VBox pauseMenu = new VBox(20);
+        pauseMenu.setAlignment(Pos.CENTER);
+        pauseMenu.setStyle(
+                "-fx-background-color: rgba(0, 0, 0, 0.8);" +
+                        "-fx-padding: 20px;"
+        );
+
+        resumeButton.setOnAction(e -> {
+            gameRoot.getChildren().remove(pauseMenu);
+            isGameRunning = true;
+        });
+
+        mainMenuButton.setOnAction(e -> {
+            gameRoot.getChildren().remove(pauseMenu);
+            primaryStage.setScene(mainMenuScene);
+            resetGame();
+        });
+
+        pauseMenu.getChildren().addAll(resumeButton, mainMenuButton);
+        gameRoot.getChildren().add(pauseMenu);
+
+        // Center the pause menu
+        pauseMenu.setLayoutX((800 - 200) / 2);  // 800 is scene width, 200 is button width
+        pauseMenu.setLayoutY((600 - 100) / 2);  // 600 is scene height, 100 is approximate menu height
+    }
+
+    private void resetGame() {
+        // Reset game state
+        towers.clear();
+        enemies.clear();
+        money = 100;
+        updateMoneyDisplay();
+        isGameRunning = false;
     }
     private void updateMoneyDisplay() {
         moneyText.setText("Your money: " + money);  // Update the text content
@@ -111,12 +269,12 @@ public class Game extends Application {
         menu = new VBox(10, sellButton, upgradeButton);
         menu.setAlignment(Pos.CENTER);
         menu.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7); -fx-padding: 10px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
-        root.getChildren().add(menu); // Add menu to the root container
+        gameRoot.getChildren().add(menu); // Add menu to the root container
     }
     private void sellTower(Tower tower) {
         money += 30; // Add 30 money for selling
         towers.remove(tower); // Remove the tower from the game
-        root.getChildren().remove(menu); // Remove the menu from the screen
+        gameRoot.getChildren().remove(menu); // Remove the menu from the screen
         System.out.println("Tower sold! Current money: " + money);
         isMenuVisible = false;
         updateMoneyDisplay();
@@ -128,7 +286,7 @@ public class Game extends Application {
 
             money -= 60; // Subtract 60 for upgrading
             tower.upgrade(); // Upgrade the tower (we'll add upgrade logic in Tower class)
-            root.getChildren().remove(menu); // Remove the menu from the screen
+            gameRoot.getChildren().remove(menu); // Remove the menu from the screen
 
             updateMoneyDisplay();
             System.out.println("Tower upgraded! Current money: " + money);
@@ -169,7 +327,7 @@ public class Game extends Application {
         gc.setStroke(Color.GRAY);
         gc.setLineWidth(20);
         gc.beginPath();
-        gc.moveTo(path.get(0).x, path.get(0).y);
+        gc.moveTo(path.getFirst().x, path.getFirst().y);
         for (int i = 1; i < path.size(); i++) {
             gc.lineTo(path.get(i).x, path.get(i).y);
         }
