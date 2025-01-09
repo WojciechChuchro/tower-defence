@@ -11,10 +11,11 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+import org.chuchro.towerdefence.ui.scene.MainMenu;
+import org.chuchro.towerdefence.ui.scene.Pause;
+import org.chuchro.towerdefence.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +23,8 @@ public class Game extends Application {
     private final List<Tower> towers = new ArrayList<>();
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Point2D> path = new ArrayList<>();
-    private float money = 100;
+    private float money = Constants.INITIAL_MONEY;
     private long lastEnemySpawnTime = 0;
-    private final long enemySpawnCooldown = 500_000_000;
     private GraphicsContext gc;
     private boolean isMenuVisible = false;
     private VBox menu;
@@ -32,99 +32,31 @@ public class Game extends Application {
     private Text moneyText;
     private Stage primaryStage;
     private Scene gameScene;
-    private Scene mainMenuScene;
-    private boolean isGameRunning = false;
+    private Pause pause;
+    public boolean isGameRunning = false;
     private AnimationTimer gameLoop;
+    MainMenu mainMenu;
 
     @Override
     public void start(Stage stage) {
         this.primaryStage = stage;
-        initializeMainMenu();
+        this.mainMenu= new MainMenu(this);
+        this.pause = new Pause(this);
         initializeGame();
 
         primaryStage.setTitle("Tower Defense Game");
-        primaryStage.setScene(mainMenuScene);
+        primaryStage.setScene(mainMenu.getScene());
         primaryStage.show();
     }
-
-    private void initializeMainMenu() {
-        // Create main menu buttons
-        Button playButton = createMenuButton("Play");
-        Button settingsButton = createMenuButton("Settings");
-        Button exitButton = createMenuButton("Exit");
-
-        // Create title
-        Text titleText = new Text("Tower Defense");
-        titleText.setFont(new Font("Arial Bold", 40));
-        titleText.setFill(Color.WHITE);
-
-        // Setup button actions
-        playButton.setOnAction(e -> startGame());
-        settingsButton.setOnAction(e -> showSettings());
-        exitButton.setOnAction(e -> primaryStage.close());
-
-        // Create main menu layout
-        VBox menuLayout = new VBox(20);
-        menuLayout.setAlignment(Pos.CENTER);
-        menuLayout.getChildren().addAll(titleText, playButton, settingsButton, exitButton);
-        menuLayout.setStyle("-fx-background-color: #2C3E50;");
-
-        mainMenuScene = new Scene(menuLayout, 800, 600);
+    public void setPrimaryStage(Scene scene) {
+        primaryStage.setScene(scene);
     }
 
-    private Button createMenuButton(String text) {
-        Button button = new Button(text);
-        button.setPrefWidth(200);
-        button.setPrefHeight(40);
-        button.setStyle(
-                "-fx-background-color: #3498db;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-size: 16px;" +
-                        "-fx-cursor: hand;"
-        );
-
-        // Add hover effect
-        button.setOnMouseEntered(e ->
-                button.setStyle(
-                        "-fx-background-color: #2980b9;" +
-                                "-fx-text-fill: white;" +
-                                "-fx-font-size: 16px;" +
-                                "-fx-cursor: hand;"
-                )
-        );
-
-        button.setOnMouseExited(e ->
-                button.setStyle(
-                        "-fx-background-color: #3498db;" +
-                                "-fx-text-fill: white;" +
-                                "-fx-font-size: 16px;" +
-                                "-fx-cursor: hand;"
-                )
-        );
-
-        return button;
+    public Pane getGameRoot() {
+        return this.gameRoot;
     }
-
-    private void showSettings() {
-        // Create settings menu
-        VBox settingsLayout = new VBox(20);
-        settingsLayout.setAlignment(Pos.CENTER);
-        settingsLayout.setStyle("-fx-background-color: #2C3E50;");
-
-        Text settingsTitle = new Text("Settings");
-        settingsTitle.setFont(new Font("Arial Bold", 30));
-        settingsTitle.setFill(Color.WHITE);
-
-        // Add some example settings
-        Button difficultyButton = createMenuButton("Difficulty: Normal");
-        Button soundButton = createMenuButton("Sound: On");
-        Button backButton = createMenuButton("Back to Main Menu");
-
-        backButton.setOnAction(e -> primaryStage.setScene(mainMenuScene));
-
-        settingsLayout.getChildren().addAll(settingsTitle, difficultyButton, soundButton, backButton);
-        Scene settingsScene = new Scene(settingsLayout, 800, 600);
-        primaryStage.setScene(settingsScene);
+    public void returnToMainMenu() {
+        primaryStage.setScene(mainMenu.getScene());
     }
 
     private void initializeGame() {
@@ -138,11 +70,10 @@ public class Game extends Application {
         gameRoot = new Pane(canvas);
         gameRoot.getChildren().add(moneyText);
 
-        // Create pause button
         Button pauseButton = new Button("Menu");
         pauseButton.setLayoutX(10);
         pauseButton.setLayoutY(10);
-        pauseButton.setOnAction(e -> showPauseMenu());
+        pauseButton.setOnAction(e -> pause.showPauseMenu());
         gameRoot.getChildren().add(pauseButton);
 
         gameScene = new Scene(gameRoot, 800, 600);
@@ -184,56 +115,24 @@ public class Game extends Application {
         };
     }
 
-    private void startGame() {
+    public void startGame() {
         isGameRunning = true;
         primaryStage.setScene(gameScene);
         gameLoop.start();
     }
 
-    private void showPauseMenu() {
-        isGameRunning = false;
 
-        Button resumeButton = createMenuButton("Resume");
-        Button mainMenuButton = createMenuButton("Main Menu");
-
-        VBox pauseMenu = new VBox(20);
-        pauseMenu.setAlignment(Pos.CENTER);
-        pauseMenu.setStyle(
-                "-fx-background-color: rgba(0, 0, 0, 0.8);" +
-                        "-fx-padding: 20px;"
-        );
-
-        resumeButton.setOnAction(e -> {
-            gameRoot.getChildren().remove(pauseMenu);
-            isGameRunning = true;
-        });
-
-        mainMenuButton.setOnAction(e -> {
-            gameRoot.getChildren().remove(pauseMenu);
-            primaryStage.setScene(mainMenuScene);
-            resetGame();
-        });
-
-        pauseMenu.getChildren().addAll(resumeButton, mainMenuButton);
-        gameRoot.getChildren().add(pauseMenu);
-
-        // Center the pause menu
-        pauseMenu.setLayoutX((800 - 200) / 2);  // 800 is scene width, 200 is button width
-        pauseMenu.setLayoutY((600 - 100) / 2);  // 600 is scene height, 100 is approximate menu height
-    }
-
-    private void resetGame() {
-        // Reset game state
+    public void resetGame() {
         towers.clear();
         enemies.clear();
         money = 100;
         updateMoneyDisplay();
         isGameRunning = false;
     }
+
     private void updateMoneyDisplay() {
         moneyText.setText("Your money: " + money);  // Update the text content
     }
-    // Method to check if the click is on any tower
     private boolean isTowerClicked(double mouseX, double mouseY) {
         for (Tower tower : towers) {
             if (tower.contains(mouseX, mouseY)) {
@@ -243,61 +142,56 @@ public class Game extends Application {
         return false;
     }
 
-    // Method to handle click event on a tower
     private void handleTowerClick(double mouseX, double mouseY) {
         for (Tower tower : towers) {
             if (tower.contains(mouseX, mouseY)) {
-                // Here you can implement any behavior you want when a tower is clicked
                 System.out.println("Tower clicked at: (" + mouseX + ", " + mouseY + ")");
                 showTowerMenu(tower);
-                // For example, show tower details, upgrade tower, etc.
-                break; // Once we find the clicked tower, we can break out of the loop
+                break;
             }
         }
     }
     private void showTowerMenu(Tower tower) {
         isMenuVisible = true;
-        // Create menu buttons
         Button sellButton = new Button("Sell (+30)");
         Button upgradeButton = new Button("Upgrade (-60)");
 
-        // Set button actions
         sellButton.setOnAction(event -> sellTower(tower));
         upgradeButton.setOnAction(event -> upgradeTower(tower));
 
-        // Create menu container
         menu = new VBox(10, sellButton, upgradeButton);
         menu.setAlignment(Pos.CENTER);
         menu.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7); -fx-padding: 10px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
-        gameRoot.getChildren().add(menu); // Add menu to the root container
+        gameRoot.getChildren().add(menu);
+    }
+    public void closeStage() {
+        this.primaryStage.close();
     }
     private void sellTower(Tower tower) {
-        money += 30; // Add 30 money for selling
-        towers.remove(tower); // Remove the tower from the game
-        gameRoot.getChildren().remove(menu); // Remove the menu from the screen
+        money += 30;
+        towers.remove(tower);
+        gameRoot.getChildren().remove(menu);
         System.out.println("Tower sold! Current money: " + money);
         isMenuVisible = false;
         updateMoneyDisplay();
     }
 
-    // Handle upgrading the tower
     private void upgradeTower(Tower tower) {
         if (money >= 60) {
 
-            money -= 60; // Subtract 60 for upgrading
-            tower.upgrade(); // Upgrade the tower (we'll add upgrade logic in Tower class)
-            gameRoot.getChildren().remove(menu); // Remove the menu from the screen
+            money -= 60;
+            tower.upgrade();
+            gameRoot.getChildren().remove(menu);
 
             updateMoneyDisplay();
             System.out.println("Tower upgraded! Current money: " + money);
         } else {
-            showInsufficientFundsAlert(); // Show an alert if the player doesn't have enough money
+            showInsufficientFundsAlert();
         }
 
         isMenuVisible = false;
     }
 
-    // Show alert for insufficient funds
     private void showInsufficientFundsAlert() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Insufficient Funds");
@@ -306,24 +200,20 @@ public class Game extends Application {
         alert.showAndWait();
     }
     public void update(long now) {
-        // Spawn enemies
-        if (now - lastEnemySpawnTime >= enemySpawnCooldown) {
+        if (now - lastEnemySpawnTime >= Constants.ENEMY_SPAWN_COOLDOWN) {
             enemies.add(new Enemy(path));
             lastEnemySpawnTime = now;
         }
 
-        // Update enemies
         enemies.removeIf(enemy -> enemy.health <= 0);
         enemies.forEach(Enemy::update);
 
-        // Update towers
         towers.forEach(tower -> tower.shoot(enemies));
     }
 
     public void render() {
         gc.clearRect(0, 0, 800, 600);
 
-        // Draw path
         gc.setStroke(Color.GRAY);
         gc.setLineWidth(20);
         gc.beginPath();
@@ -333,7 +223,6 @@ public class Game extends Application {
         }
         gc.stroke();
 
-        // Draw game objects
         enemies.forEach(enemy -> enemy.render(gc));
         towers.forEach(tower -> tower.render(gc));
     }
