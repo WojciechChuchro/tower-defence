@@ -2,7 +2,6 @@ package org.chuchro.towerdefence;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -20,13 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game extends Application {
-    private final List<Tower> towers = new ArrayList<>();
+    TowerManager towerManager;
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Point2D> path = new ArrayList<>();
     private float money = Constants.INITIAL_MONEY;
     private long lastEnemySpawnTime = 0;
     private GraphicsContext gc;
-    private boolean isMenuVisible = false;
+    public boolean isMenuVisible = false;
     private VBox menu;
     private Pane gameRoot;
     private Text moneyText;
@@ -40,6 +39,7 @@ public class Game extends Application {
     @Override
     public void start(Stage stage) {
         this.primaryStage = stage;
+        this.towerManager = new TowerManager(this);
         this.mainMenu= new MainMenu(this);
         this.pause = new Pause(this);
         initializeGame();
@@ -94,10 +94,10 @@ public class Game extends Application {
             if (!isGameRunning || isMenuVisible) {
                 return;
             }
-            if (isTowerClicked(e.getX(), e.getY())) {
-                handleTowerClick(e.getX(), e.getY());
+            if (towerManager.isTowerClicked(e.getX(), e.getY())) {
+                towerManager.handleTowerClick(e.getX(), e.getY());
             } else {
-                towers.add(new Tower(e.getX(), e.getY()));
+                towerManager.towers.add(new Tower(e.getX(), e.getY()));
             }
         });
     }
@@ -121,7 +121,7 @@ public class Game extends Application {
     }
 
     public void resetGame() {
-        towers.clear();
+        towerManager.towers.clear();
         enemies.clear();
         money = 100;
         updateMoneyDisplay();
@@ -131,72 +131,10 @@ public class Game extends Application {
     private void updateMoneyDisplay() {
         moneyText.setText("Your money: " + money);  // Update the text content
     }
-    private boolean isTowerClicked(double mouseX, double mouseY) {
-        for (Tower tower : towers) {
-            if (tower.contains(mouseX, mouseY)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void handleTowerClick(double mouseX, double mouseY) {
-        for (Tower tower : towers) {
-            if (tower.contains(mouseX, mouseY)) {
-                System.out.println("Tower clicked at: (" + mouseX + ", " + mouseY + ")");
-                showTowerMenu(tower);
-                break;
-            }
-        }
-    }
-    private void showTowerMenu(Tower tower) {
-        isMenuVisible = true;
-        Button sellButton = new Button("Sell (+30)");
-        Button upgradeButton = new Button("Upgrade (-60)");
-
-        sellButton.setOnAction(event -> sellTower(tower));
-        upgradeButton.setOnAction(event -> upgradeTower(tower));
-
-        menu = new VBox(10, sellButton, upgradeButton);
-        menu.setAlignment(Pos.CENTER);
-        menu.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7); -fx-padding: 10px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
-        gameRoot.getChildren().add(menu);
-    }
     public void closeStage() {
         this.primaryStage.close();
     }
-    private void sellTower(Tower tower) {
-        money += 30;
-        towers.remove(tower);
-        gameRoot.getChildren().remove(menu);
-        System.out.println("Tower sold! Current money: " + money);
-        isMenuVisible = false;
-        updateMoneyDisplay();
-    }
 
-    private void upgradeTower(Tower tower) {
-        if (money >= 60) {
-
-            money -= 60;
-            tower.upgrade();
-            gameRoot.getChildren().remove(menu);
-
-            updateMoneyDisplay();
-            System.out.println("Tower upgraded! Current money: " + money);
-        } else {
-            showInsufficientFundsAlert();
-        }
-
-        isMenuVisible = false;
-    }
-
-    private void showInsufficientFundsAlert() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Insufficient Funds");
-        alert.setHeaderText(null);
-        alert.setContentText("You do not have enough money to upgrade this tower!");
-        alert.showAndWait();
-    }
     public void update(long now) {
         if (now - lastEnemySpawnTime >= Constants.ENEMY_SPAWN_COOLDOWN) {
             enemies.add(new Enemy(path));
@@ -206,7 +144,7 @@ public class Game extends Application {
         enemies.removeIf(enemy -> enemy.health <= 0);
         enemies.forEach(Enemy::update);
 
-        towers.forEach(tower -> tower.shoot(enemies));
+        towerManager.towers.forEach(tower -> tower.shoot(enemies));
     }
 
     public void render() {
@@ -222,7 +160,7 @@ public class Game extends Application {
         gc.stroke();
 
         enemies.forEach(enemy -> enemy.render(gc));
-        towers.forEach(tower -> tower.render(gc));
+        towerManager.towers.forEach(tower -> tower.render(gc));
     }
 
     public static void main(String[] args) {
