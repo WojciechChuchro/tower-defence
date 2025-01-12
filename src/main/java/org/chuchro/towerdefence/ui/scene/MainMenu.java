@@ -12,12 +12,12 @@ import org.chuchro.towerdefence.ui.component.MenuButton;
 
 public class MainMenu {
     private Scene scene;
-    private Settings settings;
+    private final Settings settings;
     private final Game game;
 
     public MainMenu(Game game) {
         this.game = game;
-        this.settings = new Settings();
+        this.settings = new Settings(game, this);
         initializeMainMenu();
     }
 
@@ -29,8 +29,6 @@ public class MainMenu {
         Text titleText = new Text("Tower Defense");
         titleText.setFont(new Font("Arial Bold", 40));
         titleText.setFill(Color.WHITE);
-
-
 
         VBox menuLayout = new VBox(20);
         menuLayout.setAlignment(Pos.CENTER);

@@ -78,7 +78,6 @@ public class Game extends Application {
 
         gameScene = new Scene(gameRoot, 800, 600);
 
-        // Initialize path
         path.add(new Point2D(0, 300));
         path.add(new Point2D(200, 300));
         path.add(new Point2D(200, 100));
@@ -120,7 +119,6 @@ public class Game extends Application {
         primaryStage.setScene(gameScene);
         gameLoop.start();
     }
-
 
     public void resetGame() {
         towers.clear();
