@@ -5,7 +5,7 @@ class Solution:
             if c == '(' or c == '[' or c == '{':
                 stack.append(c)
             if c == ')' or c == ']' or c == '}' or c == '}':
-                if len(stack) == 0:
+                if stack:
                     return False
                 el = stack.pop()
                 if c == ')' and el != '(':
@@ -14,12 +14,26 @@ class Solution:
                     return False
                 if c == ']' and el != '[':
                     return False
-        if len(stack) != 0:
+        if stack:
             return False
+        return True
+
+    def is_valid(self, s: str) -> bool:
+        stack = []
+        close_to_open = {')': '(', ']': '[', '}': '{'}
+        for c in s:
+            if c in close_to_open:
+                if stack and stack[-1] == close_to_open[c]:
+                    stack.pop()
+                else:
+                    return False
+            else:
+                stack.append(c)
+
         return True
 
 
 
 
 s = Solution()
-print(s.isValid("([}])"))
+print(s.is_valid("()"))
