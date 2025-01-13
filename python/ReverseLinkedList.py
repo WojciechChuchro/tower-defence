@@ -16,10 +16,22 @@ class Solution:
             curr = save
         return prev
 
+    def reverseListRecursive(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head:
+            return None
+
+        new_head = head
+        if head.next:
+            new_head = self.reverseListRecursive(head.next)
+            head.next.next = head
+        head.next = None
+        return new_head
+
+
+
 s = Solution()
 
 ln = ListNode(1)
 ln.next = ListNode(2)
 ln.next.next = ListNode(3)
-ln.next.next.next = ListNode(4)
-print(s.reverseList(ln))
+print(s.reverseListRecursive(ln))
