@@ -11,6 +11,7 @@ import java.util.List;
 public class TowerManager {
     public final List<Tower> towers = new ArrayList<>();
     Game game;
+    VBox menu;
 
     public TowerManager(Game game) {
         this.game = game;
@@ -53,31 +54,26 @@ public class TowerManager {
         menu = new VBox(10, sellButton, upgradeButton);
         menu.setAlignment(Pos.CENTER);
         menu.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7); -fx-padding: 10px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
-        gameRoot.getChildren().add(menu);
+        game.getGameRoot().getChildren().add(menu);
     }
 
     private void sellTower(Tower tower) {
-        money += 30;
+        game.money.set(game.money.get() + 30);
         towers.remove(tower);
-        gameRoot.getChildren().remove(menu);
-        System.out.println("Tower sold! Current money: " + money);
-        isMenuVisible = false;
-        updateMoneyDisplay();
+        game.getGameRoot().getChildren().remove(menu);
+        game.isMenuVisible = false;
     }
 
     private void upgradeTower(Tower tower) {
-        if (money >= 60) {
+        if (game.money.get() >= 60) {
 
-            money -= 60;
+            game.money.set(game.money.get() - 60);
             tower.upgrade();
-            gameRoot.getChildren().remove(menu);
-
-            updateMoneyDisplay();
-            System.out.println("Tower upgraded! Current money: " + money);
+            game.getGameRoot().getChildren().remove(menu);
         } else {
             showInsufficientFundsAlert();
         }
 
-        isMenuVisible = false;
+        game.isMenuVisible = false;
     }
 }

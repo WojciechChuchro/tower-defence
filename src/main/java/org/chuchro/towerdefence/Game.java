@@ -2,6 +2,8 @@ package org.chuchro.towerdefence;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -22,11 +24,10 @@ public class Game extends Application {
     TowerManager towerManager;
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Point2D> path = new ArrayList<>();
-    private float money = Constants.INITIAL_MONEY;
+    public FloatProperty money = new SimpleFloatProperty(Constants.INITIAL_MONEY);
     private long lastEnemySpawnTime = 0;
     private GraphicsContext gc;
     public boolean isMenuVisible = false;
-    private VBox menu;
     private Pane gameRoot;
     private Text moneyText;
     private Stage primaryStage;
@@ -60,9 +61,10 @@ public class Game extends Application {
     }
 
     private void initializeGame() {
-        moneyText = new Text("Your money: " + money);
+        moneyText = new Text();
         moneyText.setX(700);
         moneyText.setY(20);
+        moneyText.textProperty().bind(money.asString("Your money: %.2f"));
 
         Canvas canvas = new Canvas(800, 600);
         gc = canvas.getGraphicsContext2D();
@@ -123,7 +125,7 @@ public class Game extends Application {
     public void resetGame() {
         towerManager.towers.clear();
         enemies.clear();
-        money = 100;
+        money.set(100);
         updateMoneyDisplay();
         isGameRunning = false;
     }

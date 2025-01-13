@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-class Tower {
+public class Tower {
     double x, y;
     double range = 100;
     double damage = 10;
