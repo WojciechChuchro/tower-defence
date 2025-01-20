@@ -6,6 +6,7 @@ public class Constants {
     public static final float INITIAL_MONEY = 100;
     public static final long ENEMY_SPAWN_COOLDOWN = 500_000_000;
     public static Difficulty difficulty = Difficulty.EASY;
+    public static boolean SOUND_ENABLED = true;
 
     private Constants(){}
 }

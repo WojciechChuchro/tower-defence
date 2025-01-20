@@ -3,12 +3,14 @@ package org.chuchro.towerdefence.ui.scene;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.chuchro.towerdefence.Game;
+import org.chuchro.towerdefence.Tower;
 import org.chuchro.towerdefence.ui.component.MenuButton;
 import org.chuchro.towerdefence.utils.Constants;
 import org.chuchro.towerdefence.utils.Difficulty;
@@ -19,6 +21,7 @@ public class Settings {
     private final Game game;
     private StackPane root;
     private VBox settingsLayout;
+    private boolean soundEnabled = true;
     private Button difficultyButton;
 
     Settings(Game game, MainMenu mainMenu) {
@@ -89,21 +92,55 @@ public class Settings {
         settingsTitle.setFill(Color.WHITE);
 
         difficultyButton = new MenuButton("Difficulty: " + Constants.difficulty);
-        Button soundButton = new MenuButton("Sound: On");
         Button backButton = new MenuButton("Back to Main Menu");
 
         difficultyButton.setOnAction(e -> showDifficultyMenu());
-        // TODO: implement sound change
-        soundButton.setOnAction(e -> System.out.println("TODO"));
+        Button soundButton = new MenuButton("Sound: " + (Constants.SOUND_ENABLED ? "On" : "Off"));
+        soundButton.setOnAction(e -> {
+            Constants.SOUND_ENABLED = !Constants.SOUND_ENABLED;
+            soundEnabled = Constants.SOUND_ENABLED;
+            soundButton.setText("Sound: " + (Constants.SOUND_ENABLED ? "On" : "Off"));
+        });
+
+        Button volumeButton = new MenuButton("Volume Settings");
+        volumeButton.setOnAction(e -> showVolumeMenu());
+
         backButton.setOnAction(e -> game.setPrimaryStage(mainMenu.getScene()));
 
-        settingsLayout.getChildren().addAll(settingsTitle, difficultyButton, soundButton, backButton);
+        settingsLayout.getChildren().addAll(settingsTitle, difficultyButton, soundButton,volumeButton,  backButton);
 
         root.getChildren().add(settingsLayout);
 
         this.scene = new Scene(root, 800, 600);
     }
+    private void showVolumeMenu() {
+        VBox volumeMenu = new VBox(10);
+        volumeMenu.setAlignment(Pos.CENTER);
+        volumeMenu.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8); -fx-padding: 20px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
+        volumeMenu.setMaxWidth(300);
+        volumeMenu.setMaxHeight(400);
 
+        Text title = new Text("Volume Control");
+        title.setFont(new Font("Arial Bold", 24));
+        title.setFill(Color.WHITE);
+
+        Slider volumeSlider = new Slider(0, 100, 50);
+        volumeSlider.setShowTickLabels(true);
+        volumeSlider.setShowTickMarks(true);
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            Tower.setGlobalVolume(newValue.doubleValue() / 100.0);
+        });
+        Button volumeButton = new MenuButton("Volume Settings");
+        volumeButton.setOnAction(e -> showVolumeMenu());
+
+
+        Button backButton = new MenuButton("Back");
+        backButton.setPrefWidth(200);
+        backButton.setOnAction(e -> root.getChildren().remove(volumeMenu));
+
+        volumeMenu.getChildren().addAll(title, volumeSlider, backButton);
+        root.getChildren().add(volumeMenu);
+    }
     public Scene getScene() {
         return this.scene;
     }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javafx.scene.media.AudioClip;
+import org.chuchro.towerdefence.utils.Constants;
 
 public class Tower {
     double x, y;
@@ -19,7 +20,7 @@ public class Tower {
     long shootingCooldown = 500_000_000;
     List<Projectile> projectiles = new ArrayList<>();
     double size = 30;
-    private AudioClip shootSound;
+    private static AudioClip shootSound;
 
     public Tower(double x, double y) {
         this.x = x;
@@ -30,6 +31,11 @@ public class Tower {
         } catch (Exception e) {
             System.err.println("Error loading sound file: " + e.getMessage());
         }
+    }
+
+    public static void setGlobalVolume(double volume) {
+        shootSound.setVolume(volume);
+
     }
     public boolean contains(double mouseX, double mouseY) {
         // Tower is drawn as a square with top-left corner at (x - size/2, y - size/2)
@@ -48,6 +54,10 @@ public class Tower {
         if (currentTime - lastShotTime < shootingCooldown) {
             return;
         }
+
+        if (shootSound != null && Constants.SOUND_ENABLED) {
+            shootSound.play();
+        }
         if (!haveTarget) {
             for (Enemy enemy : enemies) {
                 double distance = Math.sqrt(Math.pow(enemy.x - x, 2) + Math.pow(enemy.y - y, 2));
@@ -56,9 +66,6 @@ public class Tower {
                     projectiles.add(new Projectile(x, y, enemy));
                     lastShotTime = currentTime;
                     break;
-                }
-                if (shootSound != null) {
-                    shootSound.play();
                 }
             }
         }
