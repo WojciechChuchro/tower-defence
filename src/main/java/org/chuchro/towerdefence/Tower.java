@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import javafx.scene.media.AudioClip;
 import org.chuchro.towerdefence.utils.Constants;
@@ -55,24 +56,30 @@ public class Tower {
             return;
         }
 
-        if (shootSound != null && Constants.SOUND_ENABLED) {
-            shootSound.play();
-        }
+//        if (shootSound != null && Constants.SOUND_ENABLED) {
+//            shootSound.play();
+//        }
+        Optional<Enemy> foundEnemy = findEnemy(enemies);
+        if (foundEnemy.isEmpty()) return;
+
         if (!haveTarget) {
-            for (Enemy enemy : enemies) {
-                double distance = Math.sqrt(Math.pow(enemy.x - x, 2) + Math.pow(enemy.y - y, 2));
-                if (distance <= range) {
-                    haveTarget = true;
-                    projectiles.add(new Projectile(x, y, enemy));
-                    lastShotTime = currentTime;
-                    break;
-                }
+            foundEnemy.get().health-=15;
+            lastShotTime= currentTime;
+        }
+    }
+    public Optional<Enemy> findEnemy(List<Enemy> enemies) {
+        Enemy foundEnemy = null;
+
+        for (Enemy enemy : enemies) {
+            double distance = Math.sqrt(Math.pow((enemy.x - this.x), 2) + Math.pow((enemy.y - this.y), 2));
+            if (distance <= range) {
+                haveTarget = false;
+                foundEnemy = enemy;
+                break;
             }
         }
 
-        // Update and remove inactive projectiles
-        projectiles.removeIf(p -> !p.active);  // Removes all inactive projectiles
-        projectiles.forEach(Projectile::update);  // Update all remaining projectiles
+        return Optional.ofNullable(foundEnemy);
     }
 
     public void render(GraphicsContext gc) {
