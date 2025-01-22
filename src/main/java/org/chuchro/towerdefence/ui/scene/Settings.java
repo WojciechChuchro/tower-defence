@@ -107,7 +107,7 @@ public class Settings {
 
         backButton.setOnAction(e -> game.setPrimaryStage(mainMenu.getScene()));
 
-        settingsLayout.getChildren().addAll(settingsTitle, difficultyButton, soundButton,volumeButton,  backButton);
+        settingsLayout.getChildren().addAll(settingsTitle, difficultyButton, soundButton,volumeButton, backButton);
 
         root.getChildren().add(settingsLayout);
 
