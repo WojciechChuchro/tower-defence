@@ -1,14 +1,11 @@
 package org.chuchro.towerdefence;
 
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
 import javafx.scene.media.AudioClip;
 import org.chuchro.towerdefence.utils.Constants;
 
@@ -28,7 +25,7 @@ public class Tower {
         this.y = y;
         try {
             shootSound = new AudioClip(Objects.requireNonNull(getClass().getResource("/sounds/shot.mp3")).toExternalForm());
-            shootSound.setVolume(120);
+            shootSound.setVolume(0.5);
         } catch (Exception e) {
             System.err.println("Error loading sound file: " + e.getMessage());
         }
@@ -36,33 +33,32 @@ public class Tower {
 
     public static void setGlobalVolume(double volume) {
         shootSound.setVolume(volume);
-
     }
+
     public boolean contains(double mouseX, double mouseY) {
-        // Tower is drawn as a square with top-left corner at (x - size/2, y - size/2)
-        // and width and height both equal to 'size'.
         return mouseX >= (x - size / 2) && mouseX <= (x + size / 2)
                 && mouseY >= (y - size / 2) && mouseY <= (y + size / 2);
     }
 
     public void upgrade() {
-        this.range += 20; // Increase range by 20
-        this.damage += 5; // Increase damage by 5
-        this.shootingCooldown -= 100_000_000; // Decrease shooting cooldown (faster shooting)
+        this.range += 20;
+        this.damage += 5;
+        this.shootingCooldown -= 100_000_000;
     }
+
     public void shoot(List<Enemy> enemies) {
         long currentTime = System.nanoTime();
         if (currentTime - lastShotTime < shootingCooldown) {
             return;
         }
 
-//        if (shootSound != null && Constants.SOUND_ENABLED) {
-//            shootSound.play();
-//        }
         Optional<Enemy> foundEnemy = findEnemy(enemies);
         if (foundEnemy.isEmpty()) return;
 
         if (!haveTarget) {
+            if (shootSound != null && Constants.SOUND_ENABLED) {
+                shootSound.play();
+            }
             foundEnemy.get().health-=15;
             lastShotTime= currentTime;
         }
@@ -88,7 +84,6 @@ public class Tower {
         gc.setStroke(Color.LIGHTBLUE);
         gc.strokeOval(x - range, y - range, range * 2, range * 2);
 
-        // Render all projectiles
         projectiles.forEach(p -> p.render(gc));
     }
 }
