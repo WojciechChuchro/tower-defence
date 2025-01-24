@@ -80,7 +80,7 @@ public class Tower {
 
     public void render(GraphicsContext gc) {
         gc.setFill(Color.BLUE);
-        gc.fillRect(x - size / 2, y - size / 2, size, size);  // Draw tower as a square
+        gc.fillRect(x - size / 2, y - size / 2, size, size);
         gc.setStroke(Color.LIGHTBLUE);
         gc.strokeOval(x - range, y - range, range * 2, range * 2);
 

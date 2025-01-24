@@ -131,7 +131,7 @@ public class Game extends Application {
     }
 
     private void updateMoneyDisplay() {
-        moneyText.setText("Your money: " + money);  // Update the text content
+        moneyText.setText("Your money: " + money);
     }
     public void closeStage() {
         this.primaryStage.close();

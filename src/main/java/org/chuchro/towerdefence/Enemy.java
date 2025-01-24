@@ -40,7 +40,6 @@ class Enemy {
         gc.setFill(Color.RED);
         gc.fillOval(x - 10, y - 10, 20, 20);
 
-        // Health bar
         gc.setFill(Color.BLACK);
         gc.fillRect(x - 15, y - 20, 30, 5);
         gc.setFill(Color.GREEN);
